@@ -1,0 +1,29 @@
+/* Full screen layout */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* Remove default Vite demo styles */
+.logo {
+  display: none;
+}
+
+.card {
+  padding: 1rem;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Smooth fonts for dashboard look */
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+  background-color: #0f172a;
+}
