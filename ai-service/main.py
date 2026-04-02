@@ -18,8 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-mp_pose = mp.solutions.pose
-
+mp_pose = mp.solutions.pose if hasattr(mp, "solutions") else None
 
 @app.post("/analyze-video")
 async def analyze_video(file: UploadFile = File(...)):
@@ -181,3 +180,6 @@ async def analyze_video(file: UploadFile = File(...)):
 
         "tactical_insight": tactical_insight
     }
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=10000)
