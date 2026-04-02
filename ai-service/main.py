@@ -163,13 +163,23 @@ async def analyze_video(file: UploadFile = File(...)):
     tactical_insight = insight
 
     return {
-    "performance_score": 80,
-    "distance_meters": 100,
-    "avg_speed_m_per_s": 5,
-    "active_time_percent": 60,
-    "coordinates": [[0.5, 0.5]],
-    "tactical_insight": ["Test working"]
-}
+
+        "performance_score": performance_score,
+
+        "distance_meters": round(distance_meters, 2),
+
+        "avg_speed_m_per_s": round(avg_speed, 2),
+
+        "active_time_percent": round(active_percent, 2),
+
+        "total_frames": frame_count,
+
+        "video_duration_sec": round(total_time, 2),
+
+        "coordinates": coordinates,
+
+        "tactical_insight": tactical_insight
+    }
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=10000)
