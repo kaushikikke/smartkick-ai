@@ -8,42 +8,32 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const authRoutes = require("./routes/auth");
-
-
-
 const analyzeRoutes = require("./routes/analyze");
 
 const Session = require("./models/Session");
 const Player = require("./models/Player");
 
 const app = express();
+
+/* ================================
+   🔧 Middleware
+================================ */
 app.use(cors());
 app.use(express.json());
 
 /* ================================
-   🔥 MongoDB Connection
+   🔥 MongoDB Connection (SAFE + DEBUG)
 ================================ */
-mongoose.connect("mongodb://127.0.0.1:27017/smartkick");
+console.log("MONGO_URI:", process.env.MONGO_URI);
 
-mongoose.connection.once("open", () => {
-  console.log("MongoDB connected");
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB connected"))
+.catch(err => {
+  console.error("MongoDB connection error:", err);
 });
-
-/* ================================
-   📦 Session Model
-================================ */
-const SessionSchema = new mongoose.Schema({
-  distance_meters: Number,
-  avg_speed_m_per_s: Number,
-  active_time_percent: Number,
-  performance_score: Number,
-  tactical_insight: String,
-  created_at: {
-    type: Date,
-    default: Date.now
-  }
-});
-
 
 /* ================================
    🧠 Tactical Insight Engine
@@ -128,13 +118,17 @@ app.post("/upload", upload.single("video"), async (req, res) => {
       return res.status(400).json({ error: "No video uploaded" });
     }
 
+    if (!process.env.AI_URL) {
+      return res.status(500).json({ error: "AI_URL not configured" });
+    }
+
     const formData = new FormData();
     formData.append("file", fs.createReadStream(req.file.path));
 
     console.log("Calling Python AI...");
 
     const aiResponse = await axios.post(
-      "http://127.0.0.1:8000/analyze-video",
+      `${process.env.AI_URL}/analyze-video`,
       formData,
       { headers: formData.getHeaders() }
     );
@@ -142,17 +136,9 @@ app.post("/upload", upload.single("video"), async (req, res) => {
     const stats = aiResponse.data;
     console.log("Stats received:", stats);
 
-    /* ================================
-       🧠 Generate Insight + Score
-    ================================= */
     const tacticalInsight = generateTacticalInsight(stats);
     const performanceScore = calculatePerformanceScore(stats);
 
-    
-
-    /* ================================
-       💾 Save to MongoDB
-    ================================= */
     const newSession = new Session({
       ...stats,
       tactical_insight: tacticalInsight,
@@ -162,16 +148,10 @@ app.post("/upload", upload.single("video"), async (req, res) => {
     await newSession.save();
     console.log("Session saved to MongoDB");
 
-    /* ================================
-       🧹 Cleanup Uploaded File
-    ================================= */
     fs.unlink(req.file.path, (err) => {
       if (err) console.log("File cleanup error:", err);
     });
 
-    /* ================================
-       📤 Send Response
-    ================================= */
     res.json({
       ...stats,
       tactical_insight: tacticalInsight,
@@ -185,15 +165,9 @@ app.post("/upload", upload.single("video"), async (req, res) => {
 });
 
 /* ================================
-   📊 Get All Sessions (History)
+   📊 Routes
 ================================ */
-
-
-app.use(cors())
-app.use(express.json())
-
 app.use("/api", analyzeRoutes);
-
 app.use("/api/auth", authRoutes);
 
 app.get("/sessions", async (req, res) => {
@@ -204,6 +178,8 @@ app.get("/sessions", async (req, res) => {
 /* ================================
    🚀 Start Server
 ================================ */
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
