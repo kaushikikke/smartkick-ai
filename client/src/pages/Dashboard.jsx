@@ -38,35 +38,40 @@ function Dashboard() {
 
   const handleUpload = async () => {
 
-    if (!file) return alert("Please select a video");
+  if (!file) return alert("Please select a video");
 
-    try {
+  try {
 
-      setLoading(true);
+    setLoading(true);
 
-      const formData = new FormData();
-      formData.append("video", file);
+    const formData = new FormData();
+    formData.append("file", file); // ✅ FIXED KEY
 
-      const res = await axios.post(
-        "http://localhost:5000/upload",
-        formData
-      );
+    const res = await axios.post(
+      "http://127.0.0.1:8000/analyze-video", // ✅ FIXED URL
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 120000, // ✅ IMPORTANT (prevents failure)
+      }
+    );
 
-      setResult(res.data);
+    setResult(res.data);
 
-    } catch (err) {
+  } catch (err) {
 
-      console.error(err);
-      alert("Video analysis failed");
+    console.error(err);
+    alert("Video analysis failed");
 
-    } finally {
+  } finally {
 
-      setLoading(false);
+    setLoading(false);
 
-    }
+  }
 
-  };
-
+};
   /* ===============================
      PDF Export
   =============================== */
