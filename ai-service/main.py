@@ -18,11 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-try:
-    mp_pose = mp.solutions.pose
-except AttributeError:
-    from mediapipe.python.solutions import pose as mp_pose
-
+mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 
 @app.post("/analyze-video")
