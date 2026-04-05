@@ -112,7 +112,7 @@ app.get("/", (req, res) => {
 /* ================================
    🎥 Upload Route
 ================================ */
-app.post("/upload", upload.single("video"), async (req, res) => {
+app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     console.log("Upload route hit");
 
