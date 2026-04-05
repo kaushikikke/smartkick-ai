@@ -20,7 +20,7 @@ const app = express();
 ================================ */
 app.use(cors({
   origin: [
-    "https://smartkick-co1gxpin7-kaushikikkes-projects.vercel.app",
+    "https://smartkick-ai.vercel.app",
     "http://localhost:5173"
   ]
 }));
