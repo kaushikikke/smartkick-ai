@@ -19,7 +19,10 @@ const app = express();
    🔧 Middleware
 ================================ */
 app.use(cors({
-  origin: ["https://your-app.vercel.app", "http://localhost:5173"]
+  origin: [
+    "https://smartkick-co1gxpin7-kaushikikkes-projects.vercel.app",
+    "http://localhost:5173"
+  ]
 }));
 app.use(express.json());
 
