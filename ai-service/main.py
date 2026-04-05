@@ -19,7 +19,6 @@ app.add_middleware(
 )
 
 mp_pose = mp.solutions.pose
-pose = mp_pose.Pose()
 
 @app.post("/analyze-video")
 async def analyze_video(file: UploadFile = File(...)):
