@@ -48,15 +48,13 @@ function Dashboard() {
     formData.append("file", file); // ✅ FIXED KEY
 
     const res = await axios.post(
-      "http://127.0.0.1:8000/analyze-video", // ✅ FIXED URL
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        timeout: 120000, // ✅ IMPORTANT (prevents failure)
-      }
-    );
+  `${import.meta.env.VITE_API_URL}/upload`,  // ← calls your server
+  formData,
+  {
+    headers: { "Content-Type": "multipart/form-data" },
+    timeout: 120000,
+  }
+);
 
     setResult(res.data);
 
