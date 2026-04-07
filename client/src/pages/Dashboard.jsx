@@ -52,22 +52,20 @@ function Dashboard() {
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-          timeout: 120000,
+          timeout: 300000,
         }
       );
 
       setResult(res.data);
 
     } catch (err) {
-
-      console.error(err);
-      alert("Video analysis failed");
-
-    } finally {
-
-      setLoading(false);
-
-    }
+  console.error(err);
+  if (err.code === "ECONNABORTED") {
+    alert("Analysis is taking longer than usual. Please wait a moment and try again — the server may be waking up.");
+  } else {
+    alert("Video analysis failed. Please try again.");
+  }
+}
 
   };
 
@@ -248,10 +246,10 @@ function Dashboard() {
             download
             style={{
               background: "#1a1a2e",
-        border: "1px solid #333",
-        borderRadius: "10px",
-        padding: "20px",
-        marginBottom: "24px"
+              border: "1px solid #333",
+              borderRadius: "10px",
+              padding: "20px",
+              marginBottom: "24px"
             }}
           >
             Download Test Video 1
@@ -262,10 +260,10 @@ function Dashboard() {
             download
             style={{
               background: "#1a1a2e",
-        border: "1px solid #333",
-        borderRadius: "12px",
-        padding: "20px",
-        marginBottom: "24px"
+              border: "1px solid #333",
+              borderRadius: "12px",
+              padding: "20px",
+              marginBottom: "24px"
             }}
           >
             Download Test Video 2
