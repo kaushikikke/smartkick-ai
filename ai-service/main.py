@@ -13,6 +13,10 @@ app = FastAPI()
 def health():
     return {"status": "OK"}
 
+@app.get("/")
+def home():
+    return {"message": "SmartKick AI Service Running 🚀"}
+
 # Allow frontend
 app.add_middleware(
     CORSMiddleware,
