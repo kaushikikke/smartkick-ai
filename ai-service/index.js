@@ -8,7 +8,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 5001;
 
 app.get("/", (req, res) => {
-  res.send("AI Service Running 🤖");
+  res.send("AI Service Running ");
 });
 
 // Example AI route

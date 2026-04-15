@@ -129,11 +129,14 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     console.log("Calling Python AI...");
 
-    const aiResponse = await axios.post(
-      `${process.env.AI_URL}/analyze-video`,
-      formData,
-      { headers: formData.getHeaders() }
-    );
+   const aiResponse = await axios.post(
+  `${process.env.AI_URL}/analyze-video`,
+  formData,
+  { 
+    headers: formData.getHeaders(),
+    timeout: 300000 
+  }
+);
 
     const stats = aiResponse.data;
     console.log("Stats received:", stats);
@@ -175,6 +178,13 @@ app.use("/api/auth", authRoutes);
 app.get("/sessions", async (req, res) => {
   const sessions = await Session.find().sort({ created_at: -1 });
   res.json(sessions);
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    service: "SmartKick AI Backend"
+  });
 });
 
 /* ================================
