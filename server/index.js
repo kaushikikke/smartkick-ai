@@ -181,10 +181,7 @@ app.get("/sessions", async (req, res) => {
 });
 
 app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    service: "SmartKick AI Backend"
-  });
+  res.status(200).send("OK");
 });
 
 /* ================================

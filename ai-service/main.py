@@ -9,6 +9,10 @@ import math
 
 app = FastAPI()
 
+@app.get("/health")
+def health():
+    return {"status": "OK"}
+
 # Allow frontend
 app.add_middleware(
     CORSMiddleware,
@@ -97,6 +101,8 @@ async def analyze_video(file: UploadFile = File(...)):
 
     cap.release()
     pose.close()
+
+    
 
     # Convert to meters (demo scaling)
     scaling_factor = 50
