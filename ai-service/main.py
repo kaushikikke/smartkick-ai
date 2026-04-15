@@ -6,11 +6,12 @@ import numpy as np
 import tempfile
 import shutil
 import math
+from fastapi import Request
 
 app = FastAPI()
 
-@app.get("/health")
-def health():
+@app.api_route("/health", methods=["GET", "HEAD"])
+def health(request: Request):
     return {"status": "OK"}
 
 @app.get("/")
